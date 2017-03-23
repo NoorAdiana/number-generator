@@ -13,6 +13,19 @@ use Illuminate\Database\ConnectionResolverInterface;
 class ModelHasNumberGenerateTraitTest extends TestCase
 {
     /**
+     * Helpers Eloquent.
+     */
+    protected function connection()
+    {
+        return Eloquent::getConnectionResolver()->connection();
+    }
+
+    protected function schema()
+    {
+        return $this->connection()->getSchemaBuilder();
+    }
+    
+    /**
      * Bootstrap Eloquent.
      *
      * @return void
