@@ -10,6 +10,8 @@ use Illuminate\Database\SQLiteConnection;
 use Inisiatif\Tests\Stubs\EloquentModelStub;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\ConnectionResolverInterface;
+use Inisiatif\Tests\Stubs\EloquentModelThrowExceptionStub;
+use Inisiatif\NumberGenerator\Exceptions\NumberGeneratorException;
 
 class ModelHasNumberGenerateTraitTest extends TestCase
 {
@@ -31,7 +33,13 @@ class ModelHasNumberGenerateTraitTest extends TestCase
         $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
         $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
     }
-    
+
+    public function testCreateModelWillBeThrowException()
+    {
+        $this->expectException(NumberGeneratorException::class);
+        $created = EloquentModelThrowExceptionStub::create(['name' => 'Nuradiyana']);
+    }
+
     /**
      * Helpers Eloquent.
      */
