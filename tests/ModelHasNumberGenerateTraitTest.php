@@ -7,11 +7,31 @@ use PHPUnit\Framework\TestCase;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\SQLiteConnection;
+use Inisiatif\Tests\Stubs\EloquentModelStub;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\ConnectionResolverInterface;
 
 class ModelHasNumberGenerateTraitTest extends TestCase
 {
+    public function testCreateModelWillBeGenerateNumber()
+    {
+        $created = EloquentModelStub::create(['name' => 'Nuradiyana']);
+        $this->assertEquals(10, strlen($created->number_generated));
+        $this->assertEquals(date('y'), substr($created->number_generated, 0, 2));
+        $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
+        $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
+    }
+
+    public function testCreateModelWillBeGenerateNumberAutomaticWhenFieldIsAssign()
+    {
+        $created = EloquentModelStub::create(['name' => 'Nuradiyana', 'number_generated' => '0001']);
+        $this->assertEquals(10, strlen($created->number_generated));
+        $this->assertNotEquals(4, strlen($created->number_generated));
+        $this->assertEquals(date('y'), substr($created->number_generated, 0, 2));
+        $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
+        $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
+    }
+    
     /**
      * Helpers Eloquent.
      */
@@ -24,7 +44,7 @@ class ModelHasNumberGenerateTraitTest extends TestCase
     {
         return $this->connection()->getSchemaBuilder();
     }
-    
+
     /**
      * Bootstrap Eloquent.
      *
