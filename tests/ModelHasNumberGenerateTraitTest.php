@@ -8,6 +8,7 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\SQLiteConnection;
 use Inisiatif\Tests\Stubs\EloquentModelStub;
+use Inisiatif\NumberGenerator\Models\Generator;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\ConnectionResolverInterface;
 use Inisiatif\Tests\Stubs\EloquentModelThrowExceptionStub;
@@ -38,6 +39,47 @@ class ModelHasNumberGenerateTraitTest extends TestCase
     {
         $this->expectException(NumberGeneratorException::class);
         $created = EloquentModelThrowExceptionStub::create(['name' => 'Nuradiyana']);
+    }
+
+    public function testCreateModelWhenGeneratorTableIsExist()
+    {
+        $dt = new \DateTime();
+
+        $generator = Generator::create([
+            'code' => EloquentModelStub::class,
+            'year' => $dt->format('y'), 
+            'month' => $dt->format('m'), 
+            'day' => $dt->format('d'),
+            'sequence' => 1,
+        ]);
+
+        $created = EloquentModelStub::create(['name' => 'Nuradiyana']);
+        $this->assertEquals(10, strlen($created->number_generated));
+        $this->assertEquals(date('y'), substr($created->number_generated, 0, 2));
+        $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
+        $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
+    }
+
+    public function testCreateModel()
+    {
+        $dt = new \DateTime();
+
+        $generator = Generator::create(['code' => EloquentModelStub::class,
+            'year' => '90', 'month' => '01', 'day' => '01', 'sequence' => 6,
+        ]);
+
+        $created = EloquentModelStub::create(['name' => 'Nuradiyana']);
+        $this->assertEquals(10, strlen($created->number_generated));
+        
+        $this->assertEquals(1, substr($created->number_generated, -1));
+        $this->assertEquals(date('y'), substr($created->number_generated, 0, 2));
+        $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
+        $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
+
+        $this->assertNotEquals(6, substr($created->number_generated, -1));
+        $this->assertNotEquals($generator->year, substr($created->number_generated, 0, 2));
+        $this->assertNotEquals($generator->month, substr($created->number_generated, 2, 2));
+        $this->assertNotEquals($generator->day, substr($created->number_generated, 4, 2));
     }
 
     /**

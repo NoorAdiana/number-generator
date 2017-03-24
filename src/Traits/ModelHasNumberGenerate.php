@@ -20,10 +20,22 @@ trait ModelHasNumberGenerate
         }, 0);
     }
 
-    private static function findOrCreateGenerator($model) {
+    private static function findOrCreateGenerator($model) 
+    {
         $dt = new \DateTime();
 
-        return Generator::firstOrCreate(['code' => $model->getNumberGeneratorCode()], [
+        $generator = Generator::where([
+            ['code', '=', $model->getNumberGeneratorCode()],
+            ['year', '=', $dt->format('y')],
+            ['month', '=', $dt->format('m')],
+            ['day', '=', $dt->format('d')]
+        ])->first();
+
+        if($generator){
+            return $generator;
+        }
+
+        return Generator::updateOrCreate(['code' => $model->getNumberGeneratorCode()], [
             'year' => $dt->format('y'), 
             'month' => $dt->format('m'),
             'day' => $dt->format('d'),
@@ -31,7 +43,8 @@ trait ModelHasNumberGenerate
         ]);
     }
 
-    private static function beforeInsert($model) {
+    private static function beforeInsert($model)
+    {
         if(!method_exists($model, 'getNumberGeneratorCode')){
             throw new NumberGeneratorException('Canot find getNumberGeneratorCode method');
         }
