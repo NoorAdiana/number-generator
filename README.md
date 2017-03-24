@@ -1,5 +1,7 @@
 # Number generator
 
+[![Build Status](https://travis-ci.org/NoorAdiana/number-generator.svg?branch=master)](https://travis-ci.org/NoorAdiana/number-generator)
+
 Untuk keperluan internal, biasanya ada case dimana dibutuhkan unik number untuk memudahkan dalam pencatatan seperti nomor
 nomor transaksi, nomor urut register dan lainnya.
 
