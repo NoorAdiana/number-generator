@@ -31,6 +31,11 @@
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
+        "laravel": {
+            "providers": [
+                "Inisiatif\\NumberGenerator\\NumberGeneratorServiceProvider"
+            ]
+        }
     },
     "minimum-stability": "dev"
 }
