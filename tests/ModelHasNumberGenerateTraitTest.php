@@ -25,14 +25,10 @@ class ModelHasNumberGenerateTraitTest extends TestCase
         $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
     }
 
-    public function testCreateModelWillBeGenerateNumberAutomaticWhenFieldIsAssign()
+    public function testCreateModelWillBeNotGenerateNumberAutomaticWhenFieldIsAssign()
     {
         $created = EloquentModelStub::create(['name' => 'Nuradiyana', 'number_generated' => '0001']);
-        $this->assertEquals(10, strlen($created->number_generated));
-        $this->assertNotEquals(4, strlen($created->number_generated));
-        $this->assertEquals(date('y'), substr($created->number_generated, 0, 2));
-        $this->assertEquals(date('m'), substr($created->number_generated, 2, 2));
-        $this->assertEquals(date('d'), substr($created->number_generated, 4, 2));
+        $this->assertEquals('0001', $created->number_generated);
     }
 
     public function testCreateModelWillBeThrowException()

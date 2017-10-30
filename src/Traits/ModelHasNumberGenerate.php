@@ -11,12 +11,14 @@ trait ModelHasNumberGenerate
     public static function bootModelHasNumberGenerate()
     {
         static::creating(function ($model) {
-
+            
             static::beforeInsert($model);
-
-            $generator = static::findOrCreateGenerator($model);
-            $model->attributes[$model->getNumberGeneratorAttribute()] = $generator->getNumberSequence();
-            $generator->increment('sequence');
+            
+            if (!isset($model->attributes[$model->getNumberGeneratorAttribute()])) {
+                $generator = static::findOrCreateGenerator($model);
+                $model->attributes[$model->getNumberGeneratorAttribute()] = $generator->getNumberSequence();
+                $generator->increment('sequence');
+            }
         }, 0);
     }
 
